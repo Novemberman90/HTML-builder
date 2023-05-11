@@ -1,17 +1,47 @@
 
+const { stdin, stdout } = process;
 const fs = require('fs');
 const path = require('path');
-const process = require('process');
-const { stdin, stdout } = process;
+//const process = require('process');
 
 
 
-let messege = "Сообщение создает файл";
 
-fs.writeFile('./02-write-file/new_text.txt',messege , "utf-8",(data, err) => {
+
+
+fs.writeFile(path.join(__dirname,'new_text.txt', ''), '', (data, err) => {
     if(err) throw err;
     console.log("Сообщение создало файл");
 });
+
+
+stdout.write('Напиши сообщение и мы его зашифруем\n')
+stdin.on('data', data => {
+  const text = data.toString().trim();
+    if(text === 'exit') process.exit();
+    fs.appendFile(path.join(__dirname, 'new_text.txt', ''),
+    text + ' ',
+    (err) => {
+        if (err) console.log(err);
+      }
+    );
+  
+});
+
+process.on('SIGINT' , ()=>{
+    process.exit() ;
+  }) ;
+
+  process.on('exit' , ()=>{
+
+    stdout.write('\n\Ваше сообщение зашифровано');
+  });
+
+
+
+/*fs.writeFile(path.join(__dirname,messege, '', './02-write-file/new_text.txt', "utf-8",), '', (err) => {
+    if (err) console.log(err.message);
+  });*/
 
 /*fs.readFile('/02-write-file/new_text.txt', 'utf-8');
 
@@ -25,11 +55,3 @@ fs.writeFile('./02-write-file/new_text.txt',messege , "utf-8",(data, err) => {
     });
 
    const { stdin, stdout } = process;*/
-stdout.write('Напиши сообщение и мы его зашифруем\n')
-stdin.on('data', data => {
-  const text = data.toString();
-  const reverseText = text.split('').reverse().join('');
-
-  stdout.write(`\nВаше сообщение зашифровано ${reverseText}`);
-  process.exit();
-});
